@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starchorus: instruments for seeing the networks around you</title>
+<meta name="description" content="Starchorus draws the networks around you as a night sky. Strictly passive: it listens and never transmits.">
+<meta property="og:title" content="Starchorus">
+<meta property="og:description" content="Instruments for seeing the networks around you. The air is full of radio. We draw it.">
+<meta property="og:image" content="https://starchorus.com/img/og.png">
+<meta property="og:url" content="https://starchorus.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root {
+    --bg: #05070d; --bg-raised: #0a1122; --ink: #e9e4d8; --ink-2: #9aa7c4; --ink-3: #6f7c9c;
+    --rule: rgba(233,228,216,0.14); --teal: #1fb8b0; --b24: #2ab42a; --b5: #6ad2f9; --b6: #a06ad0;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: var(--ink); text-decoration-color: rgba(233,228,216,0.35); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--teal); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  header.top { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; letter-spacing: .28em; font: 600 14px var(--sans); text-transform: uppercase; }
+  .brand img { width: 30px; height: 30px; border-radius: 6px; }
+  nav a { margin-left: 22px; font-size: 14px; color: var(--ink-2); text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+
+  .hero { padding: 56px 0 36px; text-align: center; }
+  .eyebrow { font: 12px var(--mono); letter-spacing: .3em; text-transform: uppercase; color: var(--teal); }
+  h1 { font: 400 clamp(40px, 7vw, 76px)/1.05 var(--serif); margin: 18px 0 14px; letter-spacing: -.01em; }
+  .lede { font: italic 400 clamp(19px, 2.4vw, 24px)/1.4 var(--serif); color: var(--ink-2); margin: 0 auto; max-width: 30em; }
+  .shot { margin: 44px auto 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(31,184,176,.08); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .caption { font-size: 13px; color: var(--ink-3); text-align: center; margin-top: 12px; }
+
+  section { padding: 64px 0; border-top: 1px solid var(--rule); }
+  h2 { font: 400 32px/1.2 var(--serif); margin: 0 0 18px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  p { margin: 0 0 16px; color: var(--ink); }
+  .muted { color: var(--ink-2); }
+  .bands { display: flex; gap: 18px; margin: 18px 0 6px; font: 13px var(--mono); color: var(--ink-2); flex-wrap: wrap; }
+  .bands span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+  .b24::before { background: var(--b24); } .b5::before { background: var(--b5); } .b6::before { background: var(--b6); }
+
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
+  figure { margin: 0; }
+  figure img { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--rule); }
+  figcaption { font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  .tag { display: inline-block; font: 11px var(--mono); letter-spacing: .18em; text-transform: uppercase; padding: 4px 9px; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-2); margin-left: 10px; vertical-align: 6px; }
+  .button { display: inline-block; margin-top: 8px; padding: 11px 18px; border: 1px solid var(--teal); border-radius: 8px; text-decoration: none; font-size: 15px; }
+  .button:hover { background: rgba(31,184,176,.12); }
+
+  ul.principles { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 48px; }
+  ul.principles b { display: block; font: 400 21px var(--serif); margin-bottom: 4px; }
+  ul.principles span { color: var(--ink-2); }
+
+  footer { border-top: 1px solid var(--rule); padding: 32px 0 48px; font-size: 13px; color: var(--ink-3); }
+  footer p { color: var(--ink-3); margin: 0 0 8px; }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 16px; }
+    nav a { margin-left: 14px; }
+    .hero { padding-top: 32px; }
+    .cols, ul.principles { grid-template-columns: 1fr; gap: 28px; }
+    .gallery { grid-template-columns: 1fr; }
+    section { padding: 48px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><img src="img/mark.png" alt="">Starchorus</a>
+    <nav><a href="#pager">Pager</a><a href="#screen">On screen</a><a href="https://github.com/starchorus">GitHub</a></nav>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">Instruments for seeing networks</div>
+    <h1>The air is full of radio.<br>We draw it.</h1>
+    <p class="lede">Every room you walk into is crowded with networks you cannot see. Starchorus lays them out as a sky that turns slowly about you, and every mark in it answers to a measurement.</p>
+    <div class="shot"><img src="img/starchorus-wargames.jpg" width="1440" height="900" alt="Starchorus showing the Wi-Fi around a Pager as a night sky: access points as stars, clients as satellites, rings of signal strength around the centre"></div>
+    <div class="caption">The built-in demonstration: simulated data, placeholder names, no real environment.</div>
+  </div>
+
+  <section id="pager">
+    <div class="cols">
+      <div>
+        <h2>Pager</h2>
+        <p>Starchorus turns a Hak5 WiFi Pineapple Pager into an observatory. Access points are stars, their clients orbit as satellites, and the stronger the signal, the closer to the centre.</p>
+        <div class="bands"><span class="b24">2.4 GHz</span><span class="b5">5 GHz</span><span class="b6">6 GHz</span></div>
+        <p class="muted">It listens and never transmits. No deauthentication, no injection, no association, no active scan: what can be learnt by listening is learnt by listening.</p>
+        <a class="button" href="https://github.com/starchorus/pager">The source, on GitHub</a>
+      </div>
+      <div>
+        <p>A collector on the Pager reads what is on the air anyway. A single page draws it, with nothing fetched from elsewhere and nothing sent anywhere.</p>
+        <p class="muted">Three looks, two and three dimensions; baseline comparison, inventory, air quality, signal over time, recording and replay, and a homing meter. Free software under the GPL, version 3 or later.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <figure><img src="img/starchorus-foundation.jpg" width="1440" height="900" loading="lazy" alt="Foundation: a quiet star chart on deep blue"><figcaption><b>Foundation</b>: the quiet chart</figcaption></figure>
+      <figure><img src="img/starchorus-whitehall.jpg" width="1440" height="900" loading="lazy" alt="Whitehall: a plotting table on dark olive, with exercise banners"><figcaption><b>Whitehall</b>: the plotting table</figcaption></figure>
+      <figure><img src="img/starchorus-foundation-3d.jpg" width="1440" height="900" loading="lazy" alt="The same sky tilted into an orbit, height by band"><figcaption><b>Orbit</b>: the sky in three dimensions</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cols">
+      <div><h2>Mac <span class="tag">In preparation</span></h2></div>
+      <div><p>The machines on your local network, drawn in the same manner, as a native macOS application.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How the work is done</h2>
+    <ul class="principles">
+      <li><b>Passive by design.</b><span>Nothing is sent to find out what can be heard.</span></li>
+      <li><b>Exact rather than impressive.</b><span>A figure on the screen can always be traced to its source.</span></li>
+      <li><b>Quiet.</b><span>No telemetry, no accounts, no calls home. This page included.</span></li>
+      <li><b>Judged on the work.</b><span>Contributions stand or fall on their merit.</span></li>
+    </ul>
+  </section>
+
+  <section id="screen">
+    <div class="cols">
+      <div><h2>On screen</h2></div>
+      <div>
+        <p>Starchorus is at home in front of a camera. Its demonstration mode shows a convincing sky made of simulated data and placeholder names, and so discloses nothing about anyone: ready for on-set playback and screen graphics in film and television, as it stands.</p>
+        <p class="muted">Commercial licensing and production enquiries are welcome, through the 'Question or contact' form on <a href="https://github.com/starchorus/pager">GitHub</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Starchorus · <a href="https://github.com/starchorus">github.com/starchorus</a></p>
+    <p>Hak5, WiFi Pineapple and WiFi Pineapple Pager are trademarks of Hak5 LLC. Starchorus is an independent project and is not affiliated with, sponsored or endorsed by Hak5.</p>
+  </footer>
+</div>
+</body>
+</html>
